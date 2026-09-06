@@ -1,15 +1,13 @@
-# Heart Failure Prediction — Classificador Naive Bayes do zero
+# Heart Failure Prediction — Classificador Naive Bayes
 
-Classificador **Naive Bayes** construído inteiramente do zero (NumPy/SciPy puro, sem
-`sklearn.naive_bayes`) para prever a presença de doença cardíaca
+Classificador **Naive Bayes** para prever a presença de doença cardíaca
 (`HeartDisease`) na base
 [Heart Failure Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction)
 (Kaggle: `fedesoriano/heart-failure-prediction`).
 
 ## Sobre o projeto
 
-Estudo dirigido de Inteligência Artificial: modelagem probabilística Bayesiana de três
-características clínicas e implementação manual de um classificador Naive Bayes.
+Estudo dirigido de Inteligência Artificial: modelagem probabilística Bayesiana de três características clínicas e implementação manual de um classificador Naive Bayes.
 
 - **Problema:** classificação binária supervisionada ($Y=0$: Normal; $Y=1$: Doença cardíaca).
 - **Base:** 918 pacientes, 12 atributos, sem valores ausentes.
@@ -26,7 +24,7 @@ características clínicas e implementação manual de um classificador Naive Ba
 
 ## Instalação
 
-Requer Python 3.10+.
+Requer Python 3.12+.
 
 ```bash
 python -m venv .venv
@@ -90,3 +88,9 @@ Destaques da análise:
 - **Nome:** Heart Failure Prediction Dataset
 - **Fonte:** <https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction>
 - **Arquivo:** `heart.csv` (baixado automaticamente pelo `kagglehub`)
+
+
+## Autores
+
+- Hugo Matheus Costa Araújo
+- Luís Henrique Domingos da Silva
