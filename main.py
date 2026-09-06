@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Estudo Dirigido — Classificador Naive Bayes construído do zero
+Estudo Dirigido — Classificador Naive Bayes
 ================================================================
 Base: Heart Failure Prediction Dataset (Kaggle: fedesoriano/heart-failure-prediction)
 Alvo: HeartDisease (1 = Doença Cardíaca, 0 = Normal)
@@ -9,9 +9,7 @@ Alvo: HeartDisease (1 = Doença Cardíaca, 0 = Normal)
 Características escolhidas (X1, X2, X3):
   X1 = MaxHR         (contínua)  -> modelada por distribuição Normal
   X2 = Age           (contínua)  -> modelada por distribuição Normal
-  X3 = ChestPainType (categórica, 4 categorias) -> distribuição discreta
-                                                   (multinomial) com
-                                                   suavização de Laplace
+  X3 = ChestPainType (categórica, 4 categorias) -> distribuição discreta (multinomial) com suavização de Laplace
 
 O classificador é implementado manualmente com NumPy/SciPy (sem usar
 sklearn.naive_bayes). O scikit-learn é usado apenas para a divisão
@@ -20,8 +18,8 @@ as métricas. Todas as funções de densidade, prior, log-verossimilhança
 e decisão foram escritas do zero a partir das equações do Teorema de
 Bayes.
 
-Autor: estudo dirigido de Inteligência Artificial.
-Data: setembro de 2026.
+Autores: Hugo Matheus Costa Araújo e Luís Henrique Domingos da Silva 
+Data: Setembro de 2026
 """
 
 from __future__ import annotations
@@ -32,17 +30,17 @@ import warnings
 
 import matplotlib
 
-matplotlib.use("Agg")  # backend sem interface gráfica (gera arquivos PNG)
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import norm as scipy_norm  # apenas verificação/plots de apoio
-from sklearn.model_selection import train_test_split  # apenas divisão treino/teste
+from scipy.stats import norm as scipy_norm
+from sklearn.model_selection import train_test_split
 
 try:
     import kagglehub
     from kagglehub import KaggleDatasetAdapter
-except ImportError:  # pragma: no cover
+except ImportError:
     kagglehub = None
     KaggleDatasetAdapter = None
 
@@ -71,7 +69,7 @@ CHEST_PAIN_ORDER = ["ASY", "ATA", "NAP", "TA"]
 
 
 # ======================================================================
-# 1. Funções matemáticas implementadas do zero (NumPy/SciPy puro)
+# 1. Funções matemáticas implementadas (NumPy/SciPy)
 # ======================================================================
 def gaussian_pdf(x: np.ndarray | float, mu: float, sigma: float) -> np.ndarray | float:
     """
@@ -129,7 +127,7 @@ def gaussian_decision_boundaries(
         + math.log(pi0 / pi1)
     )
 
-    if abs(a) < 1e-15:  # caso linear (variâncias iguais)
+    if abs(a) < 1e-15:
         if abs(b) < EPS:
             return []
         return [float(-c / b)]
@@ -149,11 +147,11 @@ def log_sum_exp(values: list[float]) -> float:
 
 
 # ======================================================================
-# 2. Classificador Naive Bayes do zero (contínuas + categóricas)
+# 2. Classificador Naive Bayes (contínuas + categóricas)
 # ======================================================================
-class NaiveBayesFromScratch:
+class NaiveBayes:
     """
-    Classificador Naive Bayes Gaussiano/Discreto implementado do zero.
+    Classificador Naive Bayes Gaussiano/Discreto.
 
     Hipótese de independência condicional:
 
@@ -177,8 +175,8 @@ class NaiveBayesFromScratch:
         self.categories_ = {}
 
     # ------------------------------------------------------------------
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> "NaiveBayesFromScratch":
-        """Estima todos os parâmetros usando APENAS o conjunto de treinamento."""
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> "NaiveBayes":
+        """Estima todos os parâmetros usando apenas o conjunto de treinamento."""
         self.classes_ = np.array(sorted(y.unique()))
         n_train = len(y)
 
@@ -260,7 +258,7 @@ class NaiveBayesFromScratch:
 
 
 # ======================================================================
-# 3. Métricas e matriz de confusão (implementadas do zero)
+# 3. Métricas e matriz de confusão
 # ======================================================================
 def confusion_components(y_true, y_pred, positive: int = 1) -> dict[str, int]:
     """
@@ -431,7 +429,7 @@ def analyze_categorical_feature(
 # 5. Visualizações
 # ======================================================================
 def plot_continuous_feature(
-    feature: str, X_train: pd.DataFrame, y_train: pd.Series, model: NaiveBayesFromScratch
+    feature: str, X_train: pd.DataFrame, y_train: pd.Series, model: NaiveBayes
 ) -> None:
     """Histogramas por classe + densidades ajustadas + fronteira de decisão."""
     os.makedirs(FIGURES_DIR, exist_ok=True)
@@ -486,7 +484,7 @@ def plot_continuous_feature(
 
 
 def plot_categorical_feature(
-    feature: str, X_train: pd.DataFrame, y_train: pd.Series, model: NaiveBayesFromScratch
+    feature: str, X_train: pd.DataFrame, y_train: pd.Series, model: NaiveBayes
 ) -> None:
     """Barras das probabilidades por categoria/classe e razão de verossimilhanças."""
     os.makedirs(FIGURES_DIR, exist_ok=True)
@@ -549,7 +547,7 @@ def plot_confusion_matrix(parts: dict[str, int], path: str | None = None) -> Non
 # ======================================================================
 def main() -> None:
     print("=" * 78)
-    print("CLASSIFICADOR NAIVE BAYES DO ZERO — HEART FAILURE PREDICTION")
+    print("CLASSIFICADOR NAIVE BAYES — HEART FAILURE PREDICTION")
     print("=" * 78)
 
     # ------------------------------------------------------------------
@@ -558,8 +556,6 @@ def main() -> None:
     print("\n[0] Carregando a base de dados via KaggleHub ...")
     if kagglehub is not None:
         try:
-            # KaggleHub 1.x exige o nome do arquivo dentro do dataset.
-            # (O caminho "" não é mais aceito; o arquivo da base é heart.csv.)
             df = kagglehub.dataset_load(
                 KaggleDatasetAdapter.PANDAS,
                 DATASET_HANDLE,
@@ -638,7 +634,7 @@ def main() -> None:
     # 4. Classificador Naive Bayes multivariado (as 3 características)
     # ------------------------------------------------------------------
     print("\n[4] Classificador Naive Bayes com as 3 características")
-    model = NaiveBayesFromScratch(
+    model = NaiveBayes(
         continuous_features=CONTINUOUS_FEATURES,
         categorical_features=CATEGORICAL_FEATURES,
         alpha=LAPLACE_ALPHA,
